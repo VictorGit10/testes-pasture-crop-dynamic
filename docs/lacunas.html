@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste de lacunas nas reentradas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;650;750&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: uma coluna de leitura (~68ch); cada ponto = pergunta, um desenho de pixel quando ajuda, um gráfico, a ideia. */
+:root {
+  --bg: #f7f8f5; --surface: #ffffff; --ink: #17201b; --ink2: #4c5650; --ink3: #7c8680;
+  --line: #dfe3dd; --grid: #eceee9; --band: #eef0ec;
+  --nat: #1baf7a; --pas: #eda100; --tmp: #2a78d6; --mos: #eb6834; --out: #c9c8c3;
+  --on-dark: #ffffff; --on-light: #10140f;
+  --accent: #116149;
+  --f-head: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121614; --surface: #1a201d; --ink: #e8ece9; --ink2: #b3bcb6; --ink3: #87918b;
+  --line: #2c3430; --grid: #232a26; --band: #222925; --out: #5d625f; --accent: #5fd0a3; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121614; --surface: #1a201d; --ink: #e8ece9; --ink2: #b3bcb6; --ink3: #87918b;
+  --line: #2c3430; --grid: #232a26; --band: #222925; --out: #5d625f; --accent: #5fd0a3; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 740px; margin: 0 auto; padding-block: 40px 64px; display: grid; gap: 52px; }
+h1, h2 { font-family: var(--f-head); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 5vw, 38px); font-weight: 750; line-height: 1.12; }
+h2 { font-size: clamp(21px, 3.4vw, 25px); font-weight: 650; line-height: 1.22; }
+p { margin: 0; max-width: 68ch; }
+.stack { display: grid; gap: 14px; min-width: 0; }
+.kicker { font-family: var(--f-mono); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.lead { font-size: 19px; color: var(--ink2); }
+.small { font-size: 14.5px; color: var(--ink2); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; display: grid; gap: 12px; }
+.ptitle { font-family: var(--f-head); font-weight: 650; font-size: 15px; }
+.sug { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; }
+.sug b { font-family: var(--f-head); font-weight: 650; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); margin-right: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; color: var(--ink2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+.checkline { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 15.5px; }
+.checkline b { font-family: var(--f-mono); font-weight: 500; }
+svg text { font-family: var(--f-body); fill: var(--ink2); }
+.big { font-family: var(--f-mono); font-size: 44px; font-weight: 500; line-height: 1; }
+/* barras em HTML: o texto não encolhe no celular */
+.bars { display: grid; gap: 8px; }
+.brow { display: grid; grid-template-columns: 9.5em 1fr; gap: 10px; align-items: center; font-size: 15px; }
+.brow.total { font-weight: 600; border-top: 1px solid var(--line); padding-top: 8px; }
+.brow .lab small { display: block; color: var(--ink3); font-weight: 400; font-size: 12.5px; }
+.track { display: flex; height: 26px; gap: 2px; min-width: 0; }
+.seg { display: flex; align-items: center; justify-content: center; border-radius: 3px; font-family: var(--f-mono); font-size: 13px; overflow: hidden; white-space: nowrap; }
+.single { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.single .fill { height: 22px; border-radius: 3px; background: var(--pas); }
+.single .v { font-family: var(--f-mono); font-size: 13.5px; color: var(--ink); }
+@media (max-width: 520px) { .brow { grid-template-columns: 1fr; gap: 4px; } }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: right; padding: 7px 8px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 600; color: var(--ink2); font-size: 13.5px; }
+a { color: var(--accent); }
+footer { border-top: 1px solid var(--line); padding-top: 24px; }
+/* página do teste de lacunas */
+:root { --b1: #f6d58a; --b2: #eda100; --b3: #9a6a00; --b4: #5e4100; }
+.tw { overflow-x: auto; }
+td small { display: block; color: var(--ink3); font-size: 12.5px; }
+td.na { color: var(--ink3); }
+tr.tot td { font-weight: 600; border-top: 1.5px solid var(--ink3); }
+td .sw { vertical-align: -1px; margin-right: 4px; }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+.nums div { display: grid; gap: 6px; align-content: start; }
+.nums .big { font-size: 28px; }
+.nums span:last-child { font-size: 14.5px; color: var(--ink2); }
+code { font-family: var(--f-mono); font-size: 13.5px; }
+table.arq td { text-align: left; vertical-align: top; }
+table.arq td:first-child { white-space: nowrap; }
+table.arq td:last-child code { white-space: nowrap; }
+@media (max-width: 520px) { table.arq td:first-child { white-space: normal; word-break: break-all; } }
+</style>
+</head>
+<body>
+<main>
+  <header class="stack">
+    <h1>Teste de lacunas nas reentradas</h1>
+    <p>Rodei o teste de lacunas nas reentradas seguindo o que você pediu. Mantive o mesmo recorte (bioma Cerrado do IBGE, MapBiomas Coleção 11, 30 m, pixel a pixel) e as mesmas conversões de pasto em lavoura temporária (PAS→TMP) dos sete quinquênios, de 1985–1990 a 2015–2020, somados.</p>
+    <p>O denominador é o total original de PAS→TMP, 13.647.625 ha (13,6 Mha), o mesmo nos três cenários. O CSV completo e o código estão no repositório (seção 5).</p>
+    <p class="small">Os testes anteriores estão na <a href="./">primeira página</a>.</p>
+  </header>
+
+  <section class="stack" id="s1">
+    <div class="kicker">1 · o que sobra</div>
+    <h2>Preenchendo até 2 anos, 82,5% da reentrada original permanece</h2>
+    <p>Sem suavização, a reentrada soma 1.118.466 ha, 8,20% do total PAS→TMP. Preenchendo as interrupções de 1 ano, ficam 1.079.026 ha (7,91%), 96,5% da reentrada original. Preenchendo as de até 2 anos, ficam 923.045 ha (6,76%), 82,5% da original.</p>
+    <div class="panel">
+      <div class="ptitle">Reentrada por duração da interrupção, Cerrado, 1985–2020</div>
+      <div class="tw"><table>
+        <thead><tr><th>Interrupção</th><th>Sem suavização</th><th>Preenche 1 ano</th><th>Preenche até 2 anos</th></tr></thead>
+        <tbody>
+          <tr><td><i class="sw" style="background:var(--b1)"></i> 1 ano</td><td>47.525<small>0,35%</small></td><td>8.084*<small>0,06%</small></td><td>6.300*<small>0,05%</small></td></tr>
+          <tr><td><i class="sw" style="background:var(--b2)"></i> 2 anos</td><td>166.323<small>1,22%</small></td><td>166.323<small>1,22%</small></td><td>12.127*<small>0,09%</small></td></tr>
+          <tr><td><i class="sw" style="background:var(--b3)"></i> 3–4 anos</td><td>296.167<small>2,17%</small></td><td class="na">296.167<small>não se aplica</small></td><td class="na">296.167<small>não se aplica</small></td></tr>
+          <tr><td><i class="sw" style="background:var(--b4)"></i> 5 anos ou mais</td><td>608.452<small>4,46%</small></td><td class="na">608.452<small>não se aplica</small></td><td class="na">608.452<small>não se aplica</small></td></tr>
+          <tr class="tot"><td>Reentrada</td><td>1.118.466<small>8,20%</small></td><td>1.079.026<small>7,91%</small></td><td>923.045<small>6,76%</small></td></tr>
+          <tr><td>Da reentrada original</td><td>100%</td><td>96,5%</td><td>82,5%</td></tr>
+        </tbody>
+      </table></div>
+      <div class="bars" id="barras1"></div>
+      <p class="small">Em hectares e, abaixo, em % do total PAS→TMP (13,6 Mha). Grupo e faixa são os da regra sem suavização. “Não se aplica”: as regras não tocam essas faixas. * Continua reentrada pela interrupção anterior (seção 3).</p>
+    </div>
+    <p>As faixas de 3–4 anos e de 5 anos ou mais não mudam nas regras de suavização. Isso vem da própria regra, que só preenche interrupções de até 1 ou 2 anos; não mostra que as interrupções longas resistiram a um teste. Nas faixas preenchidas, sobra uma área pequena que continua contada como reentrada: 8.084 ha na faixa de 1 ano, pela regra de 1 ano, e 6.300 + 12.127 ha nas faixas de 1 e 2 anos, pela regra de 2 anos. Explico esse caso na seção 3.</p>
+    <p class="sug"><b>Ideia</b>talvez valha abrir a faixa de 5 anos ou mais (54,4% da reentrada) em 5 a 9 e 10 anos ou mais, porque ela junta interrupções de 5 a 29 anos. Isso exige rodar o teste de novo.</p>
+  </section>
+
+  <section class="stack" id="s2">
+    <div class="kicker">2 · lacunas</div>
+    <h2>Praticamente toda interrupção no Cerrado tem classe no mapa publicado</h2>
+    <p>Separei as interrupções nos dois grupos pedidos, mas a separação quase não dividiu área. As interrupções com lacuna no meio (algum ano sem classe, com o ano logo antes da volta ao pasto com classe válida) somam 0,52 ha, cerca de 6 pixels, todos na faixa de 5 anos ou mais.</p>
+    <div class="panel">
+      <div class="ptitle">Área de reentrada por grupo, sem suavização</div>
+      <div class="nums">
+        <div><span class="big">1.118.466 ha</span><span>interrupção inteiramente observada</span></div>
+        <div><span class="big">0,52 ha</span><span>interrupção com lacuna no meio</span></div>
+        <div><span class="big">1,65 ha</span><span>lacuna logo antes da volta ao pasto (o motor não conta como reentrada)</span></div>
+      </div>
+    </div>
+    <p>Mostrei à parte um terceiro caso: quando o ano logo antes da volta ao pasto fica sem classe. O motor trata isso como episódio não resolvido (Decisão 024) e não conta como reentrada; são 1,65 ha. Sem essa linha, a faixa de 1 ano do grupo com lacuna ficaria em zero por construção, e isso poderia ser lido como “não existe lacuna de 1 ano”.</p>
+    <p>Nas interrupções de 3 anos ou mais (904.619 ha), toda a área menos 0,5 ha tem classe válida diferente de pasto em todos os anos. Nos dados do Cerrado da Coleção 11, a classe 27 (não observado) e os códigos fora da lista de classes têm 0 ha em todos os anos, e o código 0 (sem classe) chega no máximo a 1.641 ha num ano.</p>
+    <p>O MapBiomas aplica filtros temporais e de preenchimento de lacunas antes de publicar a coleção. A tabela mede o que ficou sem classe no mapa publicado; ela não diz se cada ano teve imagem sem nuvem, porque um ano pode ter classe porque o filtro o preencheu. Então a pergunta sobre quanto das interrupções longas é observado ano a ano fica respondida só no sentido do mapa publicado. Ter classe válida em todos os anos também não descarta uma confusão persistente na classificação, como savana classificada como pasto por vários anos seguidos, que a página anterior já mencionava.</p>
+    <p class="sug"><b>Ideia</b>se fizer sentido, um teste à parte poderia contar quantas imagens Landsat válidas cada pixel teve em cada ano da interrupção. Seria outro dado, fora do MapBiomas.</p>
+  </section>
+
+  <section class="stack" id="s3">
+    <div class="kicker">3 · destino da área</div>
+    <h2>A área que deixa de ser reentrada vai para outros episódios</h2>
+    <p>Ao preencher uma interrupção curta, o pixel passa a ter um episódio de pasto só, e a área vai para outro tipo de episódio. A área total não muda entre as regras, por isso os percentuais continuam comparáveis. Vira pasto inicial quando o pasto antes da interrupção curta vinha desde 1985, e primeira entrada quando esse pasto tinha entrado depois de 1985.</p>
+    <div class="panel">
+      <div class="ptitle">Para onde vai a reentrada original (1.118.466 ha), em ha</div>
+      <div class="tw"><table>
+        <thead><tr><th></th><th>Preenche 1 ano</th><th>Preenche até 2 anos</th></tr></thead>
+        <tbody>
+          <tr><td>Continua reentrada, mesmo episódio</td><td>1.070.942</td><td>904.619</td></tr>
+          <tr><td>Continua reentrada, pela interrupção anterior*</td><td>8.084</td><td>18.426</td></tr>
+          <tr><td>Vira pasto inicial (contínuo desde 1985)</td><td>20.644</td><td>115.655</td></tr>
+          <tr><td>Vira primeira entrada</td><td>18.795</td><td>79.763</td></tr>
+          <tr><td>Vira episódio incerto ou não resolvido</td><td>menos de 1</td><td>2</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small">* No CSV, <code>reentrada_anterior</code>. Com isso, o total de primeira entrada passa de 5.048.732 ha para 5.067.527 ha e 5.128.495 ha; ao citar números, convém não misturar regras.</p>
+    </div>
+    <p>Os 8.084 ha da faixa de 1 ano que continuam reentrada na regra de 1 ano, e os 18.426 ha na regra de 2 anos, vêm dessa junção. Ao fechar a interrupção curta, o episódio atual se une ao episódio de pasto anterior. Se esse episódio anterior já era uma reentrada, depois de uma interrupção mais antiga e mais longa, o episódio unido continua sendo reentrada, mas pela interrupção mais antiga. Na faixa preenchida, a reentrada do mesmo episódio cai a zero.</p>
+    <div class="panel" id="pix">
+      <div class="legend"><span><i class="sw" style="background:var(--pas)"></i>pastagem</span><span><i class="sw" style="background:var(--tmp)"></i>lavoura temporária</span></div>
+    </div>
+  </section>
+
+  <section class="stack" id="s4">
+    <div class="kicker">4 · por quinquênio</div>
+    <h2>A média dos sete quinquênios esconde uma variação grande</h2>
+    <p>A reentrada sobe de quinquênio para quinquênio, e a parte que continua depois do preenchimento também muda muito. Em 1985–1990 ela é zero por definição, porque todo pasto de 1985 é pasto inicial.</p>
+    <div class="panel">
+      <div class="ptitle">Reentrada em % do PAS→TMP de cada quinquênio</div>
+      <div class="tw"><table>
+        <thead><tr><th>Quinquênio</th><th>PAS→TMP (mil ha)</th><th>Sem suavização</th><th>Preenche 1 ano</th><th>Preenche até 2 anos</th><th>Continua (até 2 anos)</th></tr></thead>
+        <tbody id="quinq"></tbody>
+      </table></div>
+      <p class="small">“Continua”: reentrada preenchendo até 2 anos, em % da reentrada sem suavização do mesmo quinquênio.</p>
+    </div>
+    <p>Nos primeiros quinquênios, a série ainda é curta para haver interrupções longas. Em 1990–1995, a interrupção pode ter no máximo 4 anos, porque o pasto anterior começa em 1985 e a volta é até 1990; em 1995–2000, no máximo 9 anos. Em 1990–1995, três quartos da reentrada vêm de interrupções de 1 ou 2 anos. Não sei dizer quanto da subida ao longo do tempo é mudança real e quanto vem do tamanho da série.</p>
+    <p>O quinquênio 1985–1990 entra no denominador (1.186.260 ha) sem poder ter reentrada. Sem ele, a reentrada seria 8,98% em vez de 8,20%. Mantive o denominador pedido.</p>
+    <p class="sug"><b>Ideia</b>talvez valha mostrar no suplemento a tabela por quinquênio ao lado da média, com uma nota sobre o tamanho da série.</p>
+  </section>
+
+  <section class="stack" id="s5">
+    <div class="kicker">5 · definições e arquivos</div>
+    <h2>Como foi feito e onde está cada arquivo</h2>
+    <p>O motor de episódios é o mesmo da página anterior (Decisão 024). O intervalo são os anos entre o último ano de pasto antes da interrupção e o primeiro ano do episódio de pasto em curso em t0, sem contar esses dois anos. Grupo e faixa são sempre os da regra sem suavização. O preenchimento só preenche anos com classe válida diferente de pasto entre dois anos de pasto; anos sem classe nunca são preenchidos.</p>
+    <div class="panel">
+      <div class="tw"><table class="arq">
+        <tbody>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/codigo/teste_lacunas.py"><code>codigo/teste_lacunas.py</code></a></td><td>O teste: roda o motor nas três regras e grava o CSV por quinquênio, grupo, faixa, regra e estado. Com <code>--casos</code>, roda os casos sintéticos.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/codigo/resumo_lacunas.py"><code>codigo/resumo_lacunas.py</code></a></td><td>Soma os sete quinquênios, monta as tabelas desta página e confere se as somas fecham.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/codigo/figura_lacunas.py"><code>codigo/figura_lacunas.py</code></a></td><td>Gera a figura em PNG.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/resultados/cerrado_lacunas.csv"><code>resultados/cerrado_lacunas.csv</code></a></td><td>A saída completa, em hectares, por quinquênio.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/resultados/resumo_lacunas.csv"><code>resultados/resumo_lacunas.csv</code></a></td><td>A tabela da seção 1, com os grupos de lacuna.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/resultados/resumo_lacunas_quinquenios.csv"><code>resultados/resumo_lacunas_quinquenios.csv</code></a></td><td>A tabela da seção 4.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/resultados/resumo_lacunas_composicao.csv"><code>resultados/resumo_lacunas_composicao.csv</code></a></td><td>O total PAS→TMP por tipo de episódio, sem suavização.</td></tr>
+          <tr><td><a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic/blob/main/resultados/figura_lacunas.png"><code>resultados/figura_lacunas.png</code></a></td><td>Figura com a seção 1 e a seção 4.</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <footer class="stack">
+    <p class="small">Dados: MapBiomas Coleção 11, bioma Cerrado do IBGE, pixel a pixel (30 m), com os grupos de classe e as regras de episódio da Decisão 024 do pasture-crop-dynamic. O código e as tabelas estão no <a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic">repositório</a>.</p>
+  </footer>
+</main>
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const COR = { P: "var(--pas)", L: "var(--tmp)" };
+const NOME = { P: "pastagem", L: "lavoura temporária" };
+const fmt = (v, d = 0) => v.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e); return e;
+}
+function seq(partes) { const s = {}; for (const [c, a, b] of partes) for (let y = a; y <= b; y++) s[y] = c; return s; }
+function faixa(s, chaves = [], marca = []) {
+  const A0 = 1985, A1 = 2020, n = A1 - A0 + 1, W = 520, cw = (W - 12) / n, top = 30, H = top + 44;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img" });
+  const X = (y) => 6 + (y - A0) * cw;
+  for (const [a, b, txt] of chaves) {
+    const x1 = X(a) + 1, x2 = X(b) + cw - 1;
+    el("path", { d: `M${x1},${top - 4}V${top - 10}H${x2}V${top - 4}`, fill: "none", stroke: "var(--ink)", "stroke-width": 1.4 }, svg);
+    const t = el("text", { x: (x1 + x2) / 2, y: top - 15, "text-anchor": "middle", "font-size": 13 }, svg); t.textContent = txt; t.style.fill = "var(--ink)";
+  }
+  for (let y = A0; y <= A1; y++) {
+    const r = el("rect", { x: X(y) + 0.5, y: top, width: cw - 1, height: 20, rx: 2, fill: COR[s[y]] }, svg);
+    el("title", {}, r).textContent = `${y}: ${NOME[s[y]]}`;
+    if (marca.includes(y)) el("rect", { x: X(y) + 1.5, y: top + 1, width: cw - 3, height: 18, rx: 2, fill: "none", stroke: "var(--ink)", "stroke-width": 1.6, "stroke-dasharray": "3 2" }, svg);
+  }
+  for (let y = A0; y <= A1; y += 5) {
+    const t = el("text", { x: X(y) + cw / 2, y: top + 38, "text-anchor": "middle", "font-size": 13 }, svg); t.textContent = y;
+  }
+  return svg;
+}
+function linhaPix(alvo, titulo, s, chaves, marca, nota) {
+  const d = document.createElement("div"); d.style.display = "grid"; d.style.gap = "4px";
+  const h = document.createElement("div"); h.innerHTML = titulo; h.style.fontSize = "15px"; d.appendChild(h);
+  d.appendChild(faixa(s, chaves, marca));
+  if (nota) { const p = document.createElement("p"); p.className = "small"; p.innerHTML = nota; d.appendChild(p); }
+  alvo.appendChild(d);
+}
+const pix = document.getElementById("pix");
+linhaPix(pix, "<b>Sem suavização</b>: reentrada depois de 1 ano fora do pasto",
+  seq([["P", 1985, 1989], ["L", 1990, 1993], ["P", 1994, 2001], ["L", 2002, 2002], ["P", 2003, 2010], ["L", 2011, 2020]]),
+  [[2002, 2002, "1 ano"]], []);
+linhaPix(pix, "<b>Preenchendo 1 ano</b>: continua reentrada, agora pela interrupção de 4 anos",
+  seq([["P", 1985, 1989], ["L", 1990, 1993], ["P", 1994, 2010], ["L", 2011, 2020]]),
+  [[1990, 1993, "4 anos"]], [2002],
+  "Pasto em 2010 e lavoura em 2015: conversão no quinquênio 2010–2015. O tracejado marca 2002, o ano preenchido como pasto.");
+
+// Barras da seção 1: cada regra, por faixa, na escala da reentrada sem suavização
+(function () {
+  const TOT = 13647625, faixas = ["1 ano", "2 anos", "3–4 anos", "5 anos ou mais"];
+  const cores = [["var(--b1)", "var(--on-light)"], ["var(--b2)", "var(--on-light)"], ["var(--b3)", "var(--on-dark)"], ["var(--b4)", "var(--on-dark)"]];
+  const d = [["Sem suavização", [47525, 166323, 296167, 608452]], ["Preenche 1 ano", [8084, 166323, 296167, 608452]], ["Preenche até 2 anos", [6300, 12127, 296167, 608452]]];
+  const max = 1118466, alvo = document.getElementById("barras1");
+  for (const [nome, v] of d) {
+    const soma = v.reduce((a, b) => a + b, 0);
+    const row = document.createElement("div"); row.className = "brow";
+    row.innerHTML = `<div class="lab">${nome}<small>${fmt(100 * soma / TOT, 2)}% do PAS→TMP</small></div>`;
+    const tr = document.createElement("div"); tr.className = "track";
+    v.forEach((x, j) => {
+      const s = document.createElement("div"); s.className = "seg"; s.style.flex = `${x} 1 0`; s.style.minWidth = "0";
+      s.style.background = cores[j][0]; s.style.color = cores[j][1];
+      s.title = `${nome}, ${faixas[j]}: ${fmt(x)} ha (${fmt(100 * x / TOT, 2)}%)`;
+      if (x / max > 0.2) s.textContent = fmt(100 * x / TOT, 2) + "%";
+      tr.appendChild(s);
+    });
+    const vazio = document.createElement("div"); vazio.style.flex = `${max - soma} 1 0`; tr.appendChild(vazio);
+    row.appendChild(tr); alvo.appendChild(row);
+  }
+  const lg = document.createElement("div"); lg.className = "legend";
+  lg.innerHTML = faixas.map((f, j) => `<span><i class="sw" style="background:${cores[j][0]}"></i>${f}</span>`).join("");
+  alvo.appendChild(lg);
+})();
+
+// Tabela por quinquênio (resumo_lacunas_quinquenios.csv)
+(function () {
+  const d = [["1985–1990", 1186.3, 0, 0, 0, null], ["1990–1995", 1354.9, 0.668, 0.508, 0.158, 23.7], ["1995–2000", 1501.3, 4.466, 4.180, 3.278, 73.4],
+    ["2000–2005", 2615.2, 6.942, 6.675, 5.647, 81.3], ["2005–2010", 1819.8, 11.229, 10.827, 9.257, 82.4],
+    ["2010–2015", 2889.8, 11.518, 11.174, 9.606, 83.4], ["2015–2020", 2280.4, 14.191, 13.809, 12.189, 85.9]];
+  const tb = document.getElementById("quinq");
+  for (const [q, t, a, b, c, r] of d) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${q}</td><td>${fmt(t)}</td><td>${fmt(a, 2)}%</td><td>${fmt(b, 2)}%</td><td>${fmt(c, 2)}%</td><td>${r === null ? "–" : fmt(r) + "%"}</td>`;
+    tb.appendChild(tr);
+  }
+  const tr = document.createElement("tr"); tr.className = "tot";
+  tr.innerHTML = `<td>Sete quinquênios</td><td>${fmt(13647.6)}</td><td>8,20%</td><td>7,91%</td><td>6,76%</td><td>82,5%</td>`;
+  tb.appendChild(tr);
+})();
+</script>
+</body>
+</html>
