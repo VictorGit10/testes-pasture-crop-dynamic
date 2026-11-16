@@ -1,0 +1,125 @@
+{
+ "T2_classe_antes": {
+  "primeira": {
+   "NAT": 80.4,
+   "TMP": 5.2,
+   "MOS21": 12.9,
+   "outros": 1.5,
+   "area_mil_ha": 335
+  },
+  "reentrada": {
+   "NAT": 52.0,
+   "TMP": 33.2,
+   "MOS21": 12.9,
+   "outros": 1.9,
+   "area_mil_ha": 41
+  }
+ },
+ "T4_reentrada_coorte1985_pct": {
+  "1985-2020": 23.5,
+  "1985-1990": null,
+  "1990-1995": 80.1,
+  "1995-2000": 64.4,
+  "2000-2005": 39.6,
+  "2005-2010": 24.2,
+  "2010-2015": 21.7,
+  "2015-2020": 16.5
+ },
+ "T5": {
+  "coorte1985_em_PAS_Mha": 0.48,
+  "continua_Mha": 0.33,
+  "diferenca_pct": 30.4
+ },
+ "T1": {
+  "NAT_TMP_mil_ha": 2966,
+  "pasto_no_quinquenio": 3.2,
+  "pasto_desde_1985": 4.3,
+  "trajetoria_pasto_entre": 11.9,
+  "trajetoria_2anos": 11.8,
+  "trajetoria_mosaico_sem_pasto": 36.6,
+  "trajetoria_direto": 50.4,
+  "trajetoria_area_mil_ha": 4352,
+  "por_periodo": null,
+  "por_regiao": {
+   "BA": {
+    "mil_ha": 2185,
+    "pasto": 10.1,
+    "mosaico_sem_pasto": 41.8,
+    "direto": 46.7
+   },
+   "MA": {
+    "mil_ha": 1089,
+    "pasto": 22.0,
+    "mosaico_sem_pasto": 38.8,
+    "direto": 38.1
+   },
+   "PI": {
+    "mil_ha": 1077,
+    "pasto": 5.5,
+    "mosaico_sem_pasto": 23.6,
+    "direto": 70.6
+   }
+  }
+ },
+ "T8_anual_mil_ha": {
+  "2015": {
+   "TMP": 44,
+   "MOS": 19
+  },
+  "2019": {
+   "TMP": 21,
+   "MOS": 33
+  },
+  "2020": {
+   "TMP": 22,
+   "MOS": 39
+  },
+  "2021": {
+   "TMP": 18,
+   "MOS": 28
+  },
+  "2025": {
+   "TMP": 43,
+   "MOS": 79
+  }
+ },
+ "T8_5anos_mil_ha": {
+  "2015-2020": {
+   "TMP": 109,
+   "MOS": 114
+  },
+  "2020-2025": {
+   "TMP": 162,
+   "MOS": 153
+  }
+ },
+ "T3": {
+  "regra_Mario": {
+   "reentrada/entrada": 10.9,
+   "reentrada/total": 10.3
+  },
+  "ignora_1ano": {
+   "reentrada/entrada": 10.6,
+   "reentrada/total": 10.0
+  },
+  "ignora_2anos": {
+   "reentrada/entrada": 9.2,
+   "reentrada/total": 8.7
+  },
+  "intervalo": {
+   "1ano": 3.7,
+   "2anos": 13.8,
+   "3-4anos": 24.5,
+   "5+anos": 58.0
+  }
+ },
+ "T7_acrescimo_pct": {
+  "1985-1990": 11.2,
+  "1990-1995": 4.3,
+  "1995-2000": 3.0,
+  "2000-2005": 1.6,
+  "2005-2010": 7.8,
+  "2010-2015": 9.6,
+  "2015-2020": 4.9
+ }
+}

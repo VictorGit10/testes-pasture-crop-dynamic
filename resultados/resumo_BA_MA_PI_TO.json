@@ -1,0 +1,131 @@
+{
+ "T2_classe_antes": {
+  "primeira": {
+   "NAT": 88.0,
+   "TMP": 3.1,
+   "MOS21": 7.2,
+   "outros": 1.7,
+   "area_mil_ha": 896
+  },
+  "reentrada": {
+   "NAT": 60.4,
+   "TMP": 30.6,
+   "MOS21": 7.6,
+   "outros": 1.4,
+   "area_mil_ha": 123
+  }
+ },
+ "T4_reentrada_coorte1985_pct": {
+  "1985-2020": 28.1,
+  "1985-1990": null,
+  "1990-1995": 89.9,
+  "1995-2000": 57.7,
+  "2000-2005": 42.1,
+  "2005-2010": 25.2,
+  "2010-2015": 28.2,
+  "2015-2020": 24.9
+ },
+ "T5": {
+  "coorte1985_em_PAS_Mha": 1.41,
+  "continua_Mha": 1.06,
+  "diferenca_pct": 25.2
+ },
+ "T1": {
+  "NAT_TMP_mil_ha": 3431,
+  "pasto_no_quinquenio": 5.8,
+  "pasto_desde_1985": 7.2,
+  "trajetoria_pasto_entre": 22.7,
+  "trajetoria_2anos": 22.5,
+  "trajetoria_mosaico_sem_pasto": 31.1,
+  "trajetoria_direto": 44.9,
+  "trajetoria_area_mil_ha": 5543,
+  "por_periodo": null,
+  "por_regiao": {
+   "BA": {
+    "mil_ha": 2185,
+    "pasto": 10.1,
+    "mosaico_sem_pasto": 41.8,
+    "direto": 46.7
+   },
+   "MA": {
+    "mil_ha": 1089,
+    "pasto": 22.0,
+    "mosaico_sem_pasto": 38.8,
+    "direto": 38.1
+   },
+   "PI": {
+    "mil_ha": 1077,
+    "pasto": 5.5,
+    "mosaico_sem_pasto": 23.6,
+    "direto": 70.6
+   },
+   "TO": {
+    "mil_ha": 1191,
+    "pasto": 62.1,
+    "mosaico_sem_pasto": 11.1,
+    "direto": 24.7
+   }
+  }
+ },
+ "T8_anual_mil_ha": {
+  "2015": {
+   "TMP": 182,
+   "MOS": 40
+  },
+  "2019": {
+   "TMP": 81,
+   "MOS": 57
+  },
+  "2020": {
+   "TMP": 51,
+   "MOS": 65
+  },
+  "2021": {
+   "TMP": 33,
+   "MOS": 50
+  },
+  "2025": {
+   "TMP": 65,
+   "MOS": 165
+  }
+ },
+ "T8_5anos_mil_ha": {
+  "2015-2020": {
+   "TMP": 460,
+   "MOS": 219
+  },
+  "2020-2025": {
+   "TMP": 306,
+   "MOS": 357
+  }
+ },
+ "T3": {
+  "regra_Mario": {
+   "reentrada/entrada": 12.1,
+   "reentrada/total": 9.9
+  },
+  "ignora_1ano": {
+   "reentrada/entrada": 11.8,
+   "reentrada/total": 9.7
+  },
+  "ignora_2anos": {
+   "reentrada/entrada": 10.0,
+   "reentrada/total": 8.2
+  },
+  "intervalo": {
+   "1ano": 2.7,
+   "2anos": 16.0,
+   "3-4anos": 23.7,
+   "5+anos": 57.6
+  }
+ },
+ "T7_acrescimo_pct": {
+  "1985-1990": 5.8,
+  "1990-1995": 2.9,
+  "1995-2000": 1.8,
+  "2000-2005": 0.8,
+  "2005-2010": 4.3,
+  "2010-2015": 7.7,
+  "2015-2020": 1.8
+ }
+}

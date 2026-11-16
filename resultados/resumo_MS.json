@@ -1,0 +1,113 @@
+{
+ "T2_classe_antes": {
+  "primeira": {
+   "NAT": 62.4,
+   "TMP": 7.3,
+   "MOS21": 28.6,
+   "outros": 1.7,
+   "area_mil_ha": 591
+  },
+  "reentrada": {
+   "NAT": 14.1,
+   "TMP": 60.6,
+   "MOS21": 23.4,
+   "outros": 1.9,
+   "area_mil_ha": 147
+  }
+ },
+ "T4_reentrada_coorte1985_pct": {
+  "1985-2020": 66.7,
+  "1985-1990": null,
+  "1990-1995": 88.0,
+  "1995-2000": 71.7,
+  "2000-2005": 69.5,
+  "2005-2010": 71.2,
+  "2010-2015": 64.9,
+  "2015-2020": 62.9
+ },
+ "T5": {
+  "coorte1985_em_PAS_Mha": 5.89,
+  "continua_Mha": 5.28,
+  "diferenca_pct": 10.4
+ },
+ "T1": {
+  "NAT_TMP_mil_ha": 221,
+  "pasto_no_quinquenio": 19.1,
+  "pasto_desde_1985": 25.0,
+  "trajetoria_pasto_entre": 67.5,
+  "trajetoria_2anos": 67.1,
+  "trajetoria_mosaico_sem_pasto": 18.3,
+  "trajetoria_direto": 13.7,
+  "trajetoria_area_mil_ha": 877,
+  "por_periodo": null,
+  "por_regiao": {
+   "MS": {
+    "mil_ha": 877,
+    "pasto": 67.5,
+    "mosaico_sem_pasto": 18.3,
+    "direto": 13.7
+   }
+  }
+ },
+ "T8_anual_mil_ha": {
+  "2015": {
+   "TMP": 112,
+   "MOS": 78
+  },
+  "2019": {
+   "TMP": 99,
+   "MOS": 76
+  },
+  "2020": {
+   "TMP": 74,
+   "MOS": 116
+  },
+  "2021": {
+   "TMP": 19,
+   "MOS": 113
+  },
+  "2025": {
+   "TMP": 48,
+   "MOS": 368
+  }
+ },
+ "T8_5anos_mil_ha": {
+  "2015-2020": {
+   "TMP": 451,
+   "MOS": 303
+  },
+  "2020-2025": {
+   "TMP": 156,
+   "MOS": 818
+  }
+ },
+ "T3": {
+  "regra_Mario": {
+   "reentrada/entrada": 20.0,
+   "reentrada/total": 7.1
+  },
+  "ignora_1ano": {
+   "reentrada/entrada": 19.4,
+   "reentrada/total": 6.8
+  },
+  "ignora_2anos": {
+   "reentrada/entrada": 17.3,
+   "reentrada/total": 6.0
+  },
+  "intervalo": {
+   "1ano": 3.6,
+   "2anos": 12.8,
+   "3-4anos": 28.5,
+   "5+anos": 55.1
+  }
+ },
+ "T7_acrescimo_pct": {
+  "1985-1990": 7.2,
+  "1990-1995": 3.9,
+  "1995-2000": 11.8,
+  "2000-2005": 2.2,
+  "2005-2010": 74.8,
+  "2010-2015": 87.7,
+  "2015-2020": 52.6
+ }
+}

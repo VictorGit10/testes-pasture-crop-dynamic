@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Testes repositório pasture-crop-dynamic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;650;750&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: uma coluna de leitura (~68ch); cada ponto = pergunta, um desenho de pixel quando ajuda, um gráfico, a ideia. */
+:root {
+  --bg: #f7f8f5; --surface: #ffffff; --ink: #17201b; --ink2: #4c5650; --ink3: #7c8680;
+  --line: #dfe3dd; --grid: #eceee9; --band: #eef0ec;
+  --nat: #1baf7a; --pas: #eda100; --tmp: #2a78d6; --mos: #eb6834; --out: #c9c8c3;
+  --on-dark: #ffffff; --on-light: #10140f;
+  --accent: #116149;
+  --f-head: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Source Sans 3", "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #121614; --surface: #1a201d; --ink: #e8ece9; --ink2: #b3bcb6; --ink3: #87918b;
+  --line: #2c3430; --grid: #232a26; --band: #222925; --out: #5d625f; --accent: #5fd0a3; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #121614; --surface: #1a201d; --ink: #e8ece9; --ink2: #b3bcb6; --ink3: #87918b;
+  --line: #2c3430; --grid: #232a26; --band: #222925; --out: #5d625f; --accent: #5fd0a3; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 17px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 740px; margin: 0 auto; padding-block: 40px 64px; display: grid; gap: 52px; }
+h1, h2 { font-family: var(--f-head); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(28px, 5vw, 38px); font-weight: 750; line-height: 1.12; }
+h2 { font-size: clamp(21px, 3.4vw, 25px); font-weight: 650; line-height: 1.22; }
+p { margin: 0; max-width: 68ch; }
+.stack { display: grid; gap: 14px; min-width: 0; }
+.kicker { font-family: var(--f-mono); font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.lead { font-size: 19px; color: var(--ink2); }
+.small { font-size: 14.5px; color: var(--ink2); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0; display: grid; gap: 12px; }
+.ptitle { font-family: var(--f-head); font-weight: 650; font-size: 15px; }
+.sug { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; }
+.sug b { font-family: var(--f-head); font-weight: 650; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); margin-right: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 14px; color: var(--ink2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+.checkline { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 15.5px; }
+.checkline b { font-family: var(--f-mono); font-weight: 500; }
+svg text { font-family: var(--f-body); fill: var(--ink2); }
+.big { font-family: var(--f-mono); font-size: 44px; font-weight: 500; line-height: 1; }
+/* barras em HTML: o texto não encolhe no celular */
+.bars { display: grid; gap: 8px; }
+.brow { display: grid; grid-template-columns: 9.5em 1fr; gap: 10px; align-items: center; font-size: 15px; }
+.brow.total { font-weight: 600; border-top: 1px solid var(--line); padding-top: 8px; }
+.brow .lab small { display: block; color: var(--ink3); font-weight: 400; font-size: 12.5px; }
+.track { display: flex; height: 26px; gap: 2px; min-width: 0; }
+.seg { display: flex; align-items: center; justify-content: center; border-radius: 3px; font-family: var(--f-mono); font-size: 13px; overflow: hidden; white-space: nowrap; }
+.single { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.single .fill { height: 22px; border-radius: 3px; background: var(--pas); }
+.single .v { font-family: var(--f-mono); font-size: 13.5px; color: var(--ink); }
+@media (max-width: 520px) { .brow { grid-template-columns: 1fr; gap: 4px; } }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: right; padding: 7px 8px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 600; color: var(--ink2); font-size: 13.5px; }
+a { color: var(--accent); }
+footer { border-top: 1px solid var(--line); padding-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+  <header class="stack">
+    <h1>Testes repositório pasture-crop-dynamic</h1>
+    <div class="legend" aria-label="Cores das classes">
+      <span><i class="sw" style="background:var(--nat)"></i>vegetação nativa</span>
+      <span><i class="sw" style="background:var(--pas)"></i>pastagem</span>
+      <span><i class="sw" style="background:var(--tmp)"></i>lavoura temporária</span>
+      <span><i class="sw" style="background:var(--mos)"></i>Mosaico de Usos</span>
+      <span><i class="sw" style="background:var(--out)"></i>outras</span>
+    </div>
+  </header>
+
+  <section class="stack" id="p1">
+    <div class="kicker">1 · RQ3</div>
+    <h2>Quanto da lavoura nova teve pasto em algum momento antes?</h2>
+    <p>A RQ3 olha cada intervalo de 5 anos e pega a passagem rápida: vegetação no início, lavoura no fim, pasto no meio. Fiquei curioso com uma pergunta mais ampla, que não substitui essa. Seguindo cada pixel ao longo da série: de toda a lavoura aberta sobre vegetação nativa, quanto teve pasto entre a última vegetação e a primeira lavoura? Aqui não importa quanto tempo o pasto durou.</p>
+    <div class="panel" id="pix1"></div>
+    <p>A base desta conta é de 15,1 Mha: toda a lavoura aberta sobre vegetação nativa entre 1986 e 2020, contando cada pixel uma vez. Ela é maior que o fluxo de 5 anos da RQ3 (7,1 Mha no Cerrado) porque inclui a lavoura que levou mais de 5 anos para chegar lá, como a do exemplo acima.</p>
+    <div class="panel">
+      <div style="display:flex;gap:14px;align-items:baseline;flex-wrap:wrap"><span class="big">41%</span><span>teve pasto antes (6,2 Mha). Outros 26% passaram por Mosaico sem pasto, 31% foram direto da vegetação para a lavoura, e 2% tiveram outros caminhos.</span></div>
+      <div class="ptitle">Por estado: lavoura nova que teve pasto antes</div>
+      <div class="bars" id="barras1"></div>
+      <p class="small">Entre parênteses, a área de lavoura nova sobre vegetação nativa (1986–2020), só a parte do estado dentro do Cerrado. Estados com menos de 100 mil ha ficaram de fora.</p>
+    </div>
+    <p>Em GO, MS, MG e TO, mais de 60% da lavoura nova teve pasto antes. No MA, na BA e no PI, menos de 25%: ali a lavoura tende a vir direto da vegetação ou passar por Mosaico. O número junta pasto de 2 anos e pasto de décadas; não separei pela duração.</p>
+    <p class="sug"><b>Ideia</b>talvez uma figura por região ao lado da RQ3, mostrando esse papel diferente do pasto em cada parte do Cerrado.</p>
+  </section>
+
+  <section class="stack" id="p2">
+    <div class="kicker">2 · reentrada</div>
+    <h2>Na reentrada, o que o pixel foi enquanto esteve fora do pasto?</h2>
+    <p>Quando um pixel sai do pasto e volta, o motor marca uma reentrada, mas não guarda o que ele foi nesse intervalo. Olhei isso nas reentradas que, depois, viraram lavoura (1990–2020). Dois casos típicos, com o intervalo fora do pasto destacado:</p>
+    <div class="panel" id="pix2"></div>
+    <div class="panel">
+      <div class="ptitle">O que houve no intervalo fora do pasto</div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--tmp)"></i>teve lavoura</span>
+        <span><i class="sw" style="background:var(--mos)"></i>teve Mosaico, sem lavoura</span>
+        <span><i class="sw" style="background:var(--nat)"></i>vegetação nativa, sem lavoura nem Mosaico</span>
+        <span><i class="sw" style="background:var(--out)"></i>outras classes</span>
+      </div>
+      <div class="bars" id="barras2"></div>
+      <p class="small">Em % da área das reentradas. Cada reentrada entra em uma categoria só: “teve lavoura” se houve lavoura em algum ano fora do pasto; senão, “Mosaico” se houve Mosaico; senão, “vegetação nativa” se houve vegetação nativa.</p>
+    </div>
+    <p>Em GO, MG e MS, a maioria teve lavoura no intervalo, o que é compatível com rotação ou com reforma de pasto usando lavoura. No TO e em BA, MA e PI, o mais comum é o intervalo ter vegetação nativa, sem lavoura nem Mosaico. Isso pode ser regeneração, abandono ou confusão entre pasto, campo e savana na classificação; o teste não distingue, e a confusão pode existir também nas outras regiões. No MT, os dois casos pesam parecido.</p>
+    <p class="sug"><b>Ideia</b>talvez valha registrar, para cada reentrada, o que o pixel foi no intervalo (lavoura, Mosaico ou vegetação nativa). Isso ajudaria a separar a rotação de outras coisas.</p>
+  </section>
+
+  <section class="stack" id="p3">
+    <div class="kicker">3 · reentrada e RQ1 × RQ2</div>
+    <h2>Parte do pasto de 1985 saiu e voltou, e é isso que separa a RQ1 da RQ2</h2>
+    <p>A reentrada junta dois casos: pasto que já existia em 1985, saiu e voltou; e pasto formado depois de 1985, que também saiu e voltou. O primeiro caso é o do código 100 no mapa de idade da pastagem. O peso de cada um depende de quanto pasto a região tinha em 1985.</p>
+    <div class="panel">
+      <div class="ptitle">Reentradas que viraram lavoura (1990–2020): de onde vinha o pasto</div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--pas)"></i>pasto que já existia em 1985</span>
+        <span><i class="sw" style="background:repeating-linear-gradient(45deg,var(--pas) 0 3px,transparent 3px 6px);border:1px solid var(--pas)"></i>pasto formado depois de 1985</span>
+      </div>
+      <div class="bars" id="barras3"></div>
+      <p class="small">GO, MG e MS tinham 82% de todo o pasto do Cerrado em 1985.</p>
+    </div>
+    <p>O mesmo fenômeno aparece na diferença entre o “pasto de 1985” da RQ1 e o da RQ2. A RQ1 segue o que era pasto em 1985; a RQ2 chama de “de 1985” só o que ficou pasto sem interrupção desde então.</p>
+    <div class="panel">
+      <div class="ptitle">Pasto de 1985 que ainda era pasto em 2020, Cerrado</div>
+      <div class="bars" id="barra17"></div>
+      <p class="small">Nos seus CSVs do domínio, a mesma diferença dá 18%.</p>
+    </div>
+    <p class="sug"><b>Ideia</b>talvez valha mostrar os dois tipos de reentrada separados. E esse número poderia ajudar a explicar no texto a diferença entre a RQ1 e a RQ2.</p>
+  </section>
+
+  <section class="stack" id="p4">
+    <div class="kicker">4 · fim da série</div>
+    <h2>O Mosaico de Usos no fim da série</h2>
+    <p>Vi na Decisão 022 que você também esbarrou no Mosaico no fim da Coleção 11: no Cerrado, o pós-processamento do bioma junta pasto e agricultura em Mosaico, e a partir de 2023 há regras que tendem a manter o Mosaico. Isso também está aparecendo na minha dissertação. Pensando nos seus dados, olhei para onde a pastagem foi a cada ano:</p>
+    <div class="panel">
+      <div class="ptitle">Pastagem que mudou de classe de um ano para o seguinte, Cerrado (mil ha)</div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--tmp)"></i>pastagem → lavoura temporária</span>
+        <span><i class="sw" style="background:var(--mos)"></i>pastagem → Mosaico de Usos</span>
+      </div>
+      <div id="linhas4"></div>
+      <p class="small">Faixa cinza: 2024–2025, os anos que a Decisão 022 descreve sem o filtro temporal completo (o que compara cada ano com os vizinhos). Segundo ela, 2020–2023 têm o filtro completo para pasto e lavoura.</p>
+    </div>
+    <p>A partir de 2020, a pastagem passou a ir mais para Mosaico do que para lavoura: em 2021–24, foram em média 195 mil ha/ano para lavoura e 659 mil para Mosaico. O salto de 2025 provavelmente é efeito da borda. Mas a inversão começa em 2020, em anos que, pela Decisão 022, têm o filtro completo, e aí eu não sei quanto é mudança real de uso e quanto é a regra do Cerrado que junta pasto e agricultura em Mosaico. Como o Mosaico fica na sua classe OAG (Mosaico e outros usos agrícolas), separado da lavoura, isso pesa nos números do fim da série.</p>
+    <p class="sug"><b>Ideia</b>talvez valha olhar o fim da série com e sem o Mosaico, e com e sem 2025, para ver quanto os resultados dependem disso.</p>
+  </section>
+
+  <section class="stack" id="p5">
+    <div class="kicker">5 · suplemento</div>
+    <h2>A reentrada é real ou é o mapa oscilando?</h2>
+    <p>Fiquei pensando se alguém não poderia questionar se essa reentrada não seria apenas oscilação na classificação. Pelos dados do Cerrado, a maior parte é longa: só 4% das reentradas vêm depois de 1 ano fora do pasto, e 54% vêm depois de 5 anos ou mais. Mesmo tratando como erro de classificação todas as saídas de até 2 anos, a reentrada cai, mas continua no mesmo patamar:</p>
+    <div class="panel">
+      <table>
+        <thead><tr><th></th><th>Regra atual</th><th>Sem saídas de 1 ano</th><th>Sem saídas de até 2 anos</th></tr></thead>
+        <tbody>
+          <tr><td>Reentrada / toda a conversão pasto → lavoura (em área)</td><td>8,2%</td><td>7,9%</td><td>6,8%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Isso afasta a oscilação de 1 ou 2 anos. Não afasta uma confusão persistente, como uma savana classificada como pasto por vários anos seguidos (o ponto 2).</p>
+    <p class="sug"><b>Ideia</b>se fizer sentido, uma linha com esses números no suplemento poderia antecipar essa pergunta.</p>
+  </section>
+
+  <footer class="stack">
+    <p class="small">Dados: MapBiomas Coleção 11, bioma Cerrado do IBGE, pixel a pixel (30 m), com os grupos de classe e as regras de episódio da Decisão 024 do pasture-crop-dynamic. O código e as tabelas por estado estão no <a href="https://github.com/VictorGit10/testes-pasture-crop-dynamic">repositório</a>.</p>
+  </footer>
+</main>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const COR = { N: "var(--nat)", P: "var(--pas)", L: "var(--tmp)", M: "var(--mos)", O: "var(--out)" };
+const NOME = { N: "vegetação nativa", P: "pastagem", L: "lavoura", M: "Mosaico", O: "outras" };
+const fmt = (v, d = 0) => v.toFixed(d).replace(".", ",");
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (parent) parent.appendChild(e); return e;
+}
+function seq(partes) { const s = {}; for (const [c, a, b] of partes) for (let y = a; y <= b; y++) s[y] = c; return s; }
+// Faixa de anos 1985–2020 de um pixel. "chaves": colchetes acima (janelas de 5 anos ou intervalos), com texto.
+function faixa(s, chaves = []) {
+  const A0 = 1985, A1 = 2020, n = A1 - A0 + 1, W = 520, cw = (W - 12) / n, top = chaves.length ? 30 : 4, H = top + 44;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img" });
+  const X = (y) => 6 + (y - A0) * cw;
+  for (const [a, b, txt] of chaves) {
+    const x1 = X(a) + 1, x2 = X(b) + cw - 1;
+    el("path", { d: `M${x1},${top - 4}V${top - 10}H${x2}V${top - 4}`, fill: "none", stroke: "var(--ink)", "stroke-width": 1.4 }, svg);
+    const t = el("text", { x: (x1 + x2) / 2, y: top - 15, "text-anchor": "middle", "font-size": 13 }, svg); t.textContent = txt; t.style.fill = "var(--ink)";
+  }
+  for (let y = A0; y <= A1; y++) {
+    const r = el("rect", { x: X(y) + 0.5, y: top, width: cw - 1, height: 20, rx: 2, fill: COR[s[y]] }, svg);
+    el("title", {}, r).textContent = `${y}: ${NOME[s[y]]}`;
+  }
+  for (let y = A0; y <= A1; y += 5) {
+    const t = el("text", { x: X(y) + cw / 2, y: top + 38, "text-anchor": "middle", "font-size": 13 }, svg); t.textContent = y;
+  }
+  return svg;
+}
+function linhaPix(alvo, titulo, s, chaves, nota) {
+  const d = document.createElement("div"); d.style.display = "grid"; d.style.gap = "4px";
+  const h = document.createElement("div"); h.innerHTML = titulo; h.style.fontSize = "15px"; d.appendChild(h);
+  d.appendChild(faixa(s, chaves));
+  if (nota) { const p = document.createElement("p"); p.className = "small"; p.innerHTML = nota; d.appendChild(p); }
+  alvo.appendChild(d);
+}
+linhaPix(document.getElementById("pix1"), "<b>Exemplo</b>: vegetação até 1994, pasto de 1995 a 2011, lavoura a partir de 2012",
+  seq([["N", 1985, 1994], ["P", 1995, 2011], ["L", 2012, 2020]]),
+  [[1990, 1995, "vegetação → pasto"], [2010, 2015, "pasto → lavoura"]],
+  "Na RQ3, este pixel aparece em dois intervalos (acima), mas nunca como vegetação → lavoura. Na pergunta ampla, é lavoura que teve pasto antes.");
+const p2 = document.getElementById("pix2");
+linhaPix(p2, "<b>Rotação</b>: lavoura no intervalo", seq([["P", 1985, 1996], ["L", 1997, 2001], ["P", 2002, 2010], ["L", 2011, 2020]]), [[1997, 2001, "fora do pasto"]]);
+linhaPix(p2, "<b>Volta à vegetação</b>: vegetação nativa no intervalo", seq([["P", 1985, 1993], ["N", 1994, 2003], ["P", 2004, 2012], ["L", 2013, 2020]]), [[1994, 2003, "fora do pasto"]]);
+
+// Barras empilhadas em HTML
+function empilhadas(id, linhas, cores, nomes) {
+  const alvo = document.getElementById(id);
+  for (const [nome, vals, sub, total] of linhas) {
+    const row = document.createElement("div"); row.className = "brow" + (total ? " total" : "");
+    row.innerHTML = `<div class="lab">${nome}${sub ? `<small>${sub}</small>` : ""}</div>`;
+    const tr = document.createElement("div"); tr.className = "track";
+    vals.forEach((v, j) => {
+      const s = document.createElement("div"); s.className = "seg"; s.style.flex = `${v} 1 0`;
+      s.style.background = cores[j][0]; s.style.color = cores[j][1];
+      if (cores[j][2]) { s.style.background = cores[j][2]; s.style.boxShadow = "inset 0 0 0 1.5px var(--pas)"; }
+      s.title = `${nome}: ${nomes[j]} ${fmt(v, 1)}%`;
+      if (v >= 9) s.textContent = Math.round(v) + "%";
+      tr.appendChild(s);
+    });
+    row.appendChild(tr); alvo.appendChild(row);
+  }
+}
+const resto = (a) => [...a, Math.max(0, 100 - a.reduce((s, v) => s + v, 0))];
+const ESC = "var(--on-light)", CLA = "var(--on-dark)";
+empilhadas("barras2", [
+  ["GO, MG e MS", resto([63.0, 13.8, 21.3])], ["MT", resto([44.5, 8.9, 45.6])],
+  ["BA, MA e PI", resto([35.1, 15.4, 48.0])], ["TO", resto([29.8, 6.2, 62.9])],
+  ["Cerrado", resto([57.6, 13.3, 27.3]), null, true]],
+  [["var(--tmp)", CLA], ["var(--mos)", CLA], ["var(--nat)", ESC], ["var(--out)", ESC]],
+  ["teve lavoura", "Mosaico sem lavoura", "vegetação nativa, sem lavoura nem Mosaico", "outras"]);
+const listra = "repeating-linear-gradient(45deg, color-mix(in oklab, var(--pas) 55%, transparent) 0 4px, transparent 4px 8px)";
+empilhadas("barras3", [
+  ["GO, MG e MS", [70.4, 29.6]], ["MT", [42.6, 57.4]], ["TO", [30.5, 69.5]], ["BA, MA e PI", [23.5, 76.5]],
+  ["Cerrado", [63.3, 36.7], null, true]],
+  [["var(--pas)", ESC], ["transparent", "var(--ink)", listra]], ["pasto de 1985", "pasto novo"]);
+
+// Barras simples do ponto 1 (por estado)
+(function () {
+  const d = [["GO", 70.0, 1.97], ["MS", 67.5, 0.88], ["MG", 62.9, 1.44], ["TO", 62.1, 1.19], ["SP", 41.3, 0.24], ["MT", 39.5, 4.91], ["MA", 22.0, 1.09], ["BA", 10.1, 2.19], ["PI", 5.5, 1.08], ["Cerrado", 41.2, 15.13]];
+  const alvo = document.getElementById("barras1");
+  for (const [uf, p, mha] of d) {
+    const row = document.createElement("div"); row.className = "brow" + (uf === "Cerrado" ? " total" : "");
+    row.innerHTML = `<div class="lab">${uf} <span style="color:var(--ink3);font-weight:400;font-size:13px">(${fmt(mha, 2)} Mha)</span></div>
+      <div class="single"><div class="fill" style="width:${p * 0.85}%"></div><span class="v">${fmt(p)}%</span></div>`;
+    alvo.appendChild(row);
+  }
+})();
+
+// Ponto 3: RQ1 x RQ2 em duas barras alinhadas
+(function () {
+  const alvo = document.getElementById("barra17"), max = 22.54;
+  const linha = (nome, sub, partes) => {
+    const row = document.createElement("div"); row.className = "brow";
+    row.innerHTML = `<div class="lab">${nome}<small>${sub}</small></div>`;
+    const tr = document.createElement("div"); tr.className = "track";
+    for (const [v, bg, txt, cor, borda] of partes) {
+      const s = document.createElement("div"); s.className = "seg"; s.style.flex = `${v} 1 0`; s.style.background = bg; s.style.color = cor;
+      if (borda) s.style.boxShadow = "inset 0 0 0 1.5px var(--ink3)"; s.textContent = txt; tr.appendChild(s);
+    }
+    row.appendChild(tr); alvo.appendChild(row);
+  };
+  linha("RQ1", "era pasto em 1985 e em 2020", [[max, "var(--pas)", "22,54 Mha", "var(--on-light)"]]);
+  linha("RQ2", "pasto contínuo desde 1985", [[18.69, "var(--pas)", "18,69 Mha", "var(--on-light)"], [3.85, "transparent", "−3,85 (17%)", "var(--ink)", true]]);
+  const p = document.createElement("p"); p.className = "small";
+  p.textContent = "A diferença, 3,85 Mha (17% da RQ1), é pasto de 1985 que saiu e voltou antes de 2020.";
+  alvo.appendChild(p);
+})();
+
+// Ponto 4: série anual
+(function () {
+  const anos = [], tmp = [375,445,228,269,324,303,352,264,251,362,358,450,399,359,780,671,429,390,339,397,401,322,492,634,782,854,585,590,477,468,315,149,227,174,229,210],
+        mos = [154,169,176,182,213,214,211,239,264,270,269,259,291,393,297,270,309,324,336,288,275,300,383,425,330,327,306,335,376,391,551,530,650,658,800,1308];
+  for (let y = 1990; y <= 2025; y++) anos.push(y);
+  const W = 560, H = 290, L = 40, R = 86, T = 14, B = 26, ymax = 1400;
+  const X = (y) => L + (y - 1990) / 35 * (W - L - R), Y = (v) => T + (1 - v / ymax) * (H - T - B);
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", role: "img" });
+  el("rect", { x: X(2023.5), y: T, width: X(2025) - X(2023.5) + 6, height: H - T - B, fill: "var(--band)" }, svg);
+  for (let v = 0; v <= ymax; v += 400) {
+    el("line", { x1: L, x2: W - R + 6, y1: Y(v), y2: Y(v), stroke: "var(--grid)" }, svg);
+    const t = el("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end", "font-size": 13 }, svg); t.textContent = v.toLocaleString("pt-BR");
+  }
+  for (let y = 1990; y <= 2025; y += 10) { const t = el("text", { x: X(y), y: H - 6, "text-anchor": "middle", "font-size": 13 }, svg); t.textContent = y; }
+  { const t = el("text", { x: X(2025), y: H - 6, "text-anchor": "middle", "font-size": 13 }, svg); t.textContent = 2025; }
+  for (const [d, c, rot] of [[tmp, "var(--tmp)", "lavoura"], [mos, "var(--mos)", "Mosaico"]]) {
+    el("path", { d: d.map((v, i) => (i ? "L" : "M") + X(anos[i]) + "," + Y(v)).join(""), fill: "none", stroke: c, "stroke-width": 2.4, "stroke-linejoin": "round" }, svg);
+    d.forEach((v, i) => { const c2 = el("circle", { cx: X(anos[i]), cy: Y(v), r: 6, fill: "transparent" }, svg); el("title", {}, c2).textContent = `${anos[i]}: ${v.toLocaleString("pt-BR")} mil ha`; });
+    const last = d[d.length - 1];
+    el("circle", { cx: X(2025), cy: Y(last), r: 3.5, fill: c }, svg);
+    const t = el("text", { x: X(2025) + 10, y: Y(last) + 4, "font-size": 13 }, svg); t.textContent = `${rot} ${last.toLocaleString("pt-BR")}`; t.style.fill = "var(--ink)";
+  }
+  document.getElementById("linhas4").appendChild(svg);
+})();
+</script>
+</body>
+</html>
