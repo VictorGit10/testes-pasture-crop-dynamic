@@ -70,20 +70,13 @@ footer { border-top: 1px solid var(--line); padding-top: 24px; }
 <main>
   <header class="stack">
     <h1>Testes repositório pasture-crop-dynamic</h1>
-    <div class="legend" aria-label="Cores das classes">
-      <span><i class="sw" style="background:var(--nat)"></i>vegetação nativa</span>
-      <span><i class="sw" style="background:var(--pas)"></i>pastagem</span>
-      <span><i class="sw" style="background:var(--tmp)"></i>lavoura temporária</span>
-      <span><i class="sw" style="background:var(--mos)"></i>Mosaico de Usos</span>
-      <span><i class="sw" style="background:var(--out)"></i>outras</span>
-    </div>
   </header>
 
   <section class="stack" id="p1">
     <div class="kicker">1 · RQ3</div>
     <h2>Quanto da lavoura nova teve pasto em algum momento antes?</h2>
-    <p>A RQ3 olha cada intervalo de 5 anos e pega a passagem rápida: vegetação no início, lavoura no fim, pasto no meio. Fiquei curioso com uma pergunta mais ampla, que não substitui essa. Seguindo cada pixel ao longo da série: de toda a lavoura aberta sobre vegetação nativa, quanto teve pasto entre a última vegetação e a primeira lavoura? Aqui não importa quanto tempo o pasto durou.</p>
-    <div class="panel" id="pix1"></div>
+    <p>A RQ3 olha cada intervalo de 5 anos e pega a passagem rápida: vegetação no início, lavoura no fim, pasto no meio. Fiquei curioso com uma pergunta um pouco diferente, que não substitui essa. Seguindo cada pixel ao longo da série: de toda a lavoura aberta sobre vegetação nativa, quanto teve pasto entre a última vegetação e a primeira lavoura? Aqui não importa quanto tempo o pasto durou.</p>
+    <div class="panel" id="pix1"><div class="legend"><span><i class="sw" style="background:var(--nat)"></i>vegetação nativa</span><span><i class="sw" style="background:var(--pas)"></i>pastagem</span><span><i class="sw" style="background:var(--tmp)"></i>lavoura temporária</span></div></div>
     <p>A base desta conta é de 15,1 Mha: toda a lavoura aberta sobre vegetação nativa entre 1986 e 2020, contando cada pixel uma vez. Ela é maior que o fluxo de 5 anos da RQ3 (7,1 Mha no Cerrado) porque inclui a lavoura que levou mais de 5 anos para chegar lá, como a do exemplo acima.</p>
     <div class="panel">
       <div style="display:flex;gap:14px;align-items:baseline;flex-wrap:wrap"><span class="big">41%</span><span>teve pasto antes (6,2 Mha). Outros 26% passaram por Mosaico sem pasto, 31% foram direto da vegetação para a lavoura, e 2% tiveram outros caminhos.</span></div>
@@ -99,7 +92,7 @@ footer { border-top: 1px solid var(--line); padding-top: 24px; }
     <div class="kicker">2 · reentrada</div>
     <h2>Na reentrada, o que o pixel foi enquanto esteve fora do pasto?</h2>
     <p>Quando um pixel sai do pasto e volta, o motor marca uma reentrada, mas não guarda o que ele foi nesse intervalo. Olhei isso nas reentradas que, depois, viraram lavoura (1990–2020). Dois casos típicos, com o intervalo fora do pasto destacado:</p>
-    <div class="panel" id="pix2"></div>
+    <div class="panel" id="pix2"><div class="legend"><span><i class="sw" style="background:var(--nat)"></i>vegetação nativa</span><span><i class="sw" style="background:var(--pas)"></i>pastagem</span><span><i class="sw" style="background:var(--tmp)"></i>lavoura temporária</span></div></div>
     <div class="panel">
       <div class="ptitle">O que houve no intervalo fora do pasto</div>
       <div class="legend">
@@ -140,7 +133,7 @@ footer { border-top: 1px solid var(--line); padding-top: 24px; }
   <section class="stack" id="p4">
     <div class="kicker">4 · fim da série</div>
     <h2>O Mosaico de Usos no fim da série</h2>
-    <p>Vi na Decisão 022 que você também esbarrou no Mosaico no fim da Coleção 11: no Cerrado, o pós-processamento do bioma junta pasto e agricultura em Mosaico, e a partir de 2023 há regras que tendem a manter o Mosaico. Isso também está aparecendo na minha dissertação. Pensando nos seus dados, olhei para onde a pastagem foi a cada ano:</p>
+    <p>Vi na Decisão 022 que você também esbarrou no Mosaico no fim da Coleção 11: no Cerrado, o pós-processamento do bioma junta pasto e agricultura em Mosaico. Isso também está aparecendo na minha dissertação. Pensando nos seus dados, olhei para onde a pastagem foi a cada ano:</p>
     <div class="panel">
       <div class="ptitle">Pastagem que mudou de classe de um ano para o seguinte, Cerrado (mil ha)</div>
       <div class="legend">
@@ -150,14 +143,14 @@ footer { border-top: 1px solid var(--line); padding-top: 24px; }
       <div id="linhas4"></div>
       <p class="small">Faixa cinza: 2024–2025, os anos que a Decisão 022 descreve sem o filtro temporal completo (o que compara cada ano com os vizinhos). Segundo ela, 2020–2023 têm o filtro completo para pasto e lavoura.</p>
     </div>
-    <p>A partir de 2020, a pastagem passou a ir mais para Mosaico do que para lavoura: em 2021–24, foram em média 195 mil ha/ano para lavoura e 659 mil para Mosaico. O salto de 2025 provavelmente é efeito da borda. Mas a inversão começa em 2020, em anos que, pela Decisão 022, têm o filtro completo, e aí eu não sei quanto é mudança real de uso e quanto é a regra do Cerrado que junta pasto e agricultura em Mosaico. Como o Mosaico fica na sua classe OAG (Mosaico e outros usos agrícolas), separado da lavoura, isso pesa nos números do fim da série.</p>
+    <p>A partir de 2020, a pastagem passou a ir mais para Mosaico do que para lavoura: em 2021–24, foram em média 195 mil ha/ano para lavoura e 659 mil para Mosaico. O salto maior é em 2025, o último ano da série. Mas a inversão já começa em 2020, em anos que, pela Decisão 022, têm o filtro completo, e não sei dizer quanto disso é mudança real de uso e quanto vem do mapeamento. Como o Mosaico fica na sua classe OAG (Mosaico e outros usos agrícolas), separado da lavoura, isso pesa nos números do fim da série.</p>
     <p class="sug"><b>Ideia</b>talvez valha olhar o fim da série com e sem o Mosaico, e com e sem 2025, para ver quanto os resultados dependem disso.</p>
   </section>
 
   <section class="stack" id="p5">
     <div class="kicker">5 · suplemento</div>
     <h2>A reentrada é real ou é o mapa oscilando?</h2>
-    <p>Fiquei pensando se alguém não poderia questionar se essa reentrada não seria apenas oscilação na classificação. Pelos dados do Cerrado, a maior parte é longa: só 4% das reentradas vêm depois de 1 ano fora do pasto, e 54% vêm depois de 5 anos ou mais. Mesmo tratando como erro de classificação todas as saídas de até 2 anos, a reentrada cai, mas continua no mesmo patamar:</p>
+    <p>Fiquei pensando se alguém não poderia questionar se essa reentrada não seria apenas oscilação na classificação. Pelos dados do Cerrado, a maior parte é longa: só 4% das reentradas vêm depois de 1 ano fora do pasto, e 54% vêm depois de 5 anos ou mais. Mesmo tratando como erro de classificação todas as saídas de até 2 anos, a reentrada cai pouco, de 8,2% para 6,8% de toda a conversão de pasto em lavoura:</p>
     <div class="panel">
       <table>
         <thead><tr><th></th><th>Regra atual</th><th>Sem saídas de 1 ano</th><th>Sem saídas de até 2 anos</th></tr></thead>
@@ -166,8 +159,8 @@ footer { border-top: 1px solid var(--line); padding-top: 24px; }
         </tbody>
       </table>
     </div>
-    <p>Isso afasta a oscilação de 1 ou 2 anos. Não afasta uma confusão persistente, como uma savana classificada como pasto por vários anos seguidos (o ponto 2).</p>
-    <p class="sug"><b>Ideia</b>se fizer sentido, uma linha com esses números no suplemento poderia antecipar essa pergunta.</p>
+    <p>Isso afasta a oscilação de 1 ou 2 anos. Mas não afastaria a possibilidade de uma confusão persistente, como uma savana classificada como pasto por vários anos seguidos (o ponto 2).</p>
+    <p class="sug"><b>Ideia</b>se fizer sentido, uma linha no suplemento com os resultados desse teste poderia antecipar essa pergunta.</p>
   </section>
 
   <footer class="stack">
