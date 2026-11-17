@@ -96,7 +96,7 @@ table.arq td:last-child code { white-space: nowrap; }
     <h2>Preenchendo até 2 anos, 82,5% da reentrada original permanece</h2>
     <p>Sem suavização, a reentrada soma 1.118.466 ha, 8,20% do total PAS→TMP. Preenchendo as interrupções de 1 ano, ficam 1.079.026 ha (7,91%), 96,5% da reentrada original. Preenchendo as de até 2 anos, ficam 923.045 ha (6,76%), 82,5% da original.</p>
     <div class="panel">
-      <div class="ptitle">Reentrada por duração da interrupção, Cerrado, 1985–2020</div>
+      <div class="ptitle">Interrupção inteiramente observada: reentrada por duração da interrupção, Cerrado, 1985–2020</div>
       <div class="tw"><table>
         <thead><tr><th>Interrupção</th><th>Sem suavização</th><th>Preenche 1 ano</th><th>Preenche até 2 anos</th></tr></thead>
         <tbody>
@@ -109,10 +109,9 @@ table.arq td:last-child code { white-space: nowrap; }
         </tbody>
       </table></div>
       <div class="bars" id="barras1"></div>
-      <p class="small">Em hectares e, abaixo, em % do total PAS→TMP (13,6 Mha). Grupo e faixa são os da regra sem suavização. “Não se aplica”: as regras não tocam essas faixas. * Continua reentrada pela interrupção anterior (seção 3).</p>
+      <p class="small">Em hectares e, abaixo, em % do total PAS→TMP (13,6 Mha). O grupo com lacuna soma 0,52 ha (seção 2) e não muda nenhum número desta tabela; a tabela com os dois grupos está em <code>resultados/resumo_lacunas.csv</code>. Grupo e faixa são os da regra sem suavização. “Não se aplica”: as regras não tocam essas faixas. * Continua reentrada pela interrupção anterior (seção 3).</p>
     </div>
     <p>As faixas de 3–4 anos e de 5 anos ou mais não mudam nas regras de suavização. Isso vem da própria regra, que só preenche interrupções de até 1 ou 2 anos; não mostra que as interrupções longas resistiram a um teste. Nas faixas preenchidas, sobra uma área pequena que continua contada como reentrada: 8.084 ha na faixa de 1 ano, pela regra de 1 ano, e 6.300 + 12.127 ha nas faixas de 1 e 2 anos, pela regra de 2 anos. Explico esse caso na seção 3.</p>
-    <p class="sug"><b>Ideia</b>talvez valha abrir a faixa de 5 anos ou mais (54,4% da reentrada) em 5 a 9 e 10 anos ou mais, porque ela junta interrupções de 5 a 29 anos. Isso exige rodar o teste de novo.</p>
   </section>
 
   <section class="stack" id="s2">
@@ -129,8 +128,7 @@ table.arq td:last-child code { white-space: nowrap; }
     </div>
     <p>Mostrei à parte um terceiro caso: quando o ano logo antes da volta ao pasto fica sem classe. O motor trata isso como episódio não resolvido (Decisão 024) e não conta como reentrada; são 1,65 ha. Sem essa linha, a faixa de 1 ano do grupo com lacuna ficaria em zero por construção, e isso poderia ser lido como “não existe lacuna de 1 ano”.</p>
     <p>Nas interrupções de 3 anos ou mais (904.619 ha), toda a área menos 0,5 ha tem classe válida diferente de pasto em todos os anos. Nos dados do Cerrado da Coleção 11, a classe 27 (não observado) e os códigos fora da lista de classes têm 0 ha em todos os anos, e o código 0 (sem classe) chega no máximo a 1.641 ha num ano.</p>
-    <p>O MapBiomas aplica filtros temporais e de preenchimento de lacunas antes de publicar a coleção. A tabela mede o que ficou sem classe no mapa publicado; ela não diz se cada ano teve imagem sem nuvem, porque um ano pode ter classe porque o filtro o preencheu. Então a pergunta sobre quanto das interrupções longas é observado ano a ano fica respondida só no sentido do mapa publicado. Ter classe válida em todos os anos também não descarta uma confusão persistente na classificação, como savana classificada como pasto por vários anos seguidos, que a página anterior já mencionava.</p>
-    <p class="sug"><b>Ideia</b>se fizer sentido, um teste à parte poderia contar quantas imagens Landsat válidas cada pixel teve em cada ano da interrupção. Seria outro dado, fora do MapBiomas.</p>
+    <p>Uma ressalva: o MapBiomas preenche lacunas antes de publicar a coleção, então “inteiramente observada” quer dizer que o mapa publicado tem uma classe válida em cada ano do intervalo.</p>
   </section>
 
   <section class="stack" id="s3">
@@ -167,10 +165,9 @@ table.arq td:last-child code { white-space: nowrap; }
         <thead><tr><th>Quinquênio</th><th>PAS→TMP (mil ha)</th><th>Sem suavização</th><th>Preenche 1 ano</th><th>Preenche até 2 anos</th><th>Continua (até 2 anos)</th></tr></thead>
         <tbody id="quinq"></tbody>
       </table></div>
-      <p class="small">“Continua”: reentrada preenchendo até 2 anos, em % da reentrada sem suavização do mesmo quinquênio.</p>
+      <p class="small">“Continua”: reentrada preenchendo até 2 anos, em % da reentrada sem suavização do mesmo quinquênio. O quinquênio 1985–1990 entra no denominador sem poder ter reentrada; sem ele, a média seria 8,98% em vez de 8,20%.</p>
     </div>
-    <p>Nos primeiros quinquênios, a série ainda é curta para haver interrupções longas. Em 1990–1995, a interrupção pode ter no máximo 4 anos, porque o pasto anterior começa em 1985 e a volta é até 1990; em 1995–2000, no máximo 9 anos. Em 1990–1995, três quartos da reentrada vêm de interrupções de 1 ou 2 anos. Não sei dizer quanto da subida ao longo do tempo é mudança real e quanto vem do tamanho da série.</p>
-    <p>O quinquênio 1985–1990 entra no denominador (1.186.260 ha) sem poder ter reentrada. Sem ele, a reentrada seria 8,98% em vez de 8,20%. Mantive o denominador pedido.</p>
+    <p>No começo, a série ainda é curta para haver interrupções longas: em 1990–1995, a interrupção pode ter no máximo 4 anos, e três quartos da reentrada vêm de interrupções de 1 ou 2 anos. Não sei dizer quanto da subida é mudança real e quanto vem do tamanho da série.</p>
     <p class="sug"><b>Ideia</b>talvez valha mostrar no suplemento a tabela por quinquênio ao lado da média, com uma nota sobre o tamanho da série.</p>
   </section>
 
