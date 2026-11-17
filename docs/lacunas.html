@@ -88,6 +88,7 @@ table.arq td:last-child code { white-space: nowrap; }
     <h1>Teste de lacunas nas reentradas</h1>
     <p>Rodei o teste de lacunas nas reentradas seguindo o que você pediu. Mantive o mesmo recorte (bioma Cerrado do IBGE, MapBiomas Coleção 11, 30 m, pixel a pixel) e as mesmas conversões de pasto em lavoura temporária (PAS→TMP) dos sete quinquênios, de 1985–1990 a 2015–2020, somados.</p>
     <p>O denominador é o total original de PAS→TMP, 13.647.625 ha (13,6 Mha), o mesmo nos três cenários. O CSV completo e o código estão no repositório (seção 5).</p>
+    <p>Em resumo: no Cerrado, a reentrada não vem de anos sem informação, porque quase não há lacuna no mapa publicado (0,52 ha). Também não vem de oscilações curtas: preenchendo as interrupções de até 2 anos, 82,5% dela continua reentrada. O teste não descarta uma confusão que dure vários anos seguidos, como savana classificada como pasto.</p>
     <p class="small">Os testes anteriores estão na <a href="./">primeira página</a>.</p>
   </header>
 
@@ -111,7 +112,7 @@ table.arq td:last-child code { white-space: nowrap; }
       <div class="bars" id="barras1"></div>
       <p class="small">Em hectares e, abaixo, em % do total PAS→TMP (13,6 Mha). O grupo com lacuna soma 0,52 ha (seção 2) e não muda nenhum número desta tabela; a tabela com os dois grupos está em <code>resultados/resumo_lacunas.csv</code>. Grupo e faixa são os da regra sem suavização. “Não se aplica”: as regras não tocam essas faixas. * Continua reentrada pela interrupção anterior (seção 3).</p>
     </div>
-    <p>As faixas de 3–4 anos e de 5 anos ou mais não mudam nas regras de suavização. Isso vem da própria regra, que só preenche interrupções de até 1 ou 2 anos; não mostra que as interrupções longas resistiram a um teste. Nas faixas preenchidas, sobra uma área pequena que continua contada como reentrada: 8.084 ha na faixa de 1 ano, pela regra de 1 ano, e 6.300 + 12.127 ha nas faixas de 1 e 2 anos, pela regra de 2 anos. Explico esse caso na seção 3.</p>
+    <p>A maior parte da reentrada vem de interrupções longas: 81% dela vem de interrupções de 3 anos ou mais, que nenhuma das regras alcança, e só 19% de interrupções de 1 ou 2 anos. As faixas de 3–4 anos e de 5 anos ou mais não mudam nas regras de suavização. Isso vem da própria regra, que só preenche interrupções de até 1 ou 2 anos; não mostra que as interrupções longas resistiram a um teste. Nas faixas preenchidas, sobra uma área pequena que continua contada como reentrada: 8.084 ha na faixa de 1 ano, pela regra de 1 ano, e 6.300 + 12.127 ha nas faixas de 1 e 2 anos, pela regra de 2 anos. Explico esse caso na seção 3.</p>
   </section>
 
   <section class="stack" id="s2">
